@@ -251,10 +251,21 @@ async function execute(){
 function renderMetricsOnly(){$("metrics").innerHTML=vars.map(v=>`<div class="metricrow"><span>${v}</span><div class="bar"><div class="fill" style="width:${state.metrics[v]}%"></div></div><b>${Math.round(state.metrics[v])}</b></div>`).join("")+`<div class="metricrow"><span>KPI negocio</span><div class="bar"><div class="fill" style="width:${state.business}%"></div></div><b>${Math.round(state.business)}</b></div>`;$("scoreTag").textContent=state.score+"/100"}
 function save(){localStorage.setItem(stateKey(),JSON.stringify(state))}
 let sb=null;
-async function syncScore(){if(!sb)return;await sb.from("change_leadership_scores").upsert({class_code:classCode,team,score:state.score,round:state.round+1,business:state.business,appropriation:state.metrics.Apropiación,updated_at:new Date().toISOString()},{onConflict:"class_code,team"})}
+if(C.supabaseUrl && C.supabaseAnonKey && window.supabase){
+  sb = window.supabase.createClient(C.supabaseUrl, C.supabaseAnonKey);
+}
+async function syncScore(){
+ if(!sb)return;
+ const {error}=await sb.from("change_leadership_scores").upsert({class_code:classCode,team,score:state.score,round:state.round+1,business:state.business,appropriation:state.metrics.Apropiación,updated_at:new Date().toISOString()},{onConflict:"class_code,team"});
+ if(error){console.error("Supabase sync error:",error);alert("No se pudo actualizar el ranking. Revisa la conexión con Supabase.");}
+}
 async function renderRanking(){
  let rows=[{team,score:state.score,round:state.round+1}];
- if(sb){let {data}=await sb.from("change_leadership_scores").select("*").eq("class_code",classCode).order("score",{ascending:false});if(data?.length)rows=data}
+ if(sb){
+   let {data,error}=await sb.from("change_leadership_scores").select("*").eq("class_code",classCode).order("score",{ascending:false});
+   if(error)console.error("Supabase ranking error:",error);
+   if(data?.length)rows=data;
+ }
  rows.sort((a,b)=>b.score-a.score);$("ranking").innerHTML=rows.map((r,i)=>`<div class="rankrow ${r.team===team?"me":""}"><span>${i+1}</span><span>${r.team}</span><b>${Math.round(r.score||0)}/100</b><span>R${r.round||1}</span></div>`).join("");
 }
 $("execute").onclick=execute;
