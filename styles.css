@@ -1,0 +1,52 @@
+*{box-sizing:border-box}body{margin:0;font-family:Inter,Arial,sans-serif;background:#f5f5f2;color:#171717}header{position:sticky;top:0;z-index:9;background:#111;color:white;padding:14px 4vw;display:flex;justify-content:space-between;gap:12px}header span{margin-left:18px}.topstats{font-weight:700}main{max-width:1380px;margin:auto;padding:28px}.hero{background:#171717;color:white;padding:32px;border-radius:20px;margin-bottom:20px}.hero h1{font-size:42px;margin:5px 0}.eyebrow{letter-spacing:2px;font-size:12px}.rule{margin-top:18px;padding:14px;background:#292929;border-radius:10px}.grid{display:grid;grid-template-columns:1.55fr 1fr;gap:20px}.card{background:white;border:1px solid #ddd;border-radius:16px;padding:20px;margin-bottom:18px;box-shadow:0 4px 16px #0000000a}.card h2{margin-top:0}.card small,.muted{color:#777;font-weight:400}.sticky{position:sticky;top:72px}.signals{display:grid;grid-template-columns:1fr 1fr;gap:10px}.signal{padding:12px;border-left:4px solid #222;background:#f4f4f4;border-radius:8px}.diagrow,.betrow,.metricrow{display:grid;grid-template-columns:160px 1fr 50px;gap:10px;align-items:center;margin:10px 0}.metricrow{grid-template-columns:150px 1fr 45px}.bar{height:10px;background:#e5e5e5;border-radius:8px;overflow:hidden}.fill{height:100%;background:#222}.sum{margin-top:14px;padding:10px;background:#eee;border-radius:8px}textarea,select{width:100%;padding:12px;border:1px solid #ccc;border-radius:9px;margin:7px 0 14px;font:inherit}textarea{height:88px}.practices{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:8px 0 18px}.practice{border:1px solid #ccc;border-radius:9px;padding:10px;cursor:pointer}.practice.selected{background:#171717;color:white;border-color:#171717}.practice b{display:block}.practice small{font-size:11px}button{width:100%;padding:15px;border:0;border-radius:10px;background:#111;color:#fff;font-weight:800;cursor:pointer;margin-top:12px}.secondary{background:#e8e8e8;color:#111}.rankrow{display:grid;grid-template-columns:45px 1fr 90px 50px;padding:9px 0;border-bottom:1px solid #eee}.me{font-weight:800}.feedback{margin-top:14px;padding:14px;background:#f0f0ed;border-radius:10px}.delta{font-weight:700}.historyitem{border-left:3px solid #222;padding:8px 12px;margin:10px 0}@media(max-width:900px){.grid{grid-template-columns:1fr}.sticky{position:static}.signals{grid-template-columns:1fr}.hero h1{font-size:32px}}
+
+.historyitem{
+  min-width:0;
+  max-width:100%;
+  overflow-wrap:anywhere;
+  word-break:break-word;
+  white-space:normal;
+}
+#history{
+  width:100%;
+  max-width:100%;
+  overflow-x:hidden;
+}
+.historyitem small{
+  display:block;
+  max-width:100%;
+  overflow-wrap:anywhere;
+  word-break:break-word;
+  white-space:normal;
+}
+.grid, section, aside, .card{min-width:0;}
+
+
+.chartwrap{width:100%;overflow:hidden}
+#evolutionChart{display:block;width:100%;height:340px;max-width:100%}
+.chartlegend{display:flex;flex-wrap:wrap;gap:8px 14px;margin-top:10px;font-size:12px}
+.chartlegend span{display:inline-flex;align-items:center;gap:5px}
+.chartdot{width:9px;height:9px;border-radius:50%;display:inline-block}
+
+
+.budgetbox{padding:12px;background:#f1f1ef;border-radius:10px;margin:8px 0 14px}
+.budgetbox>div:first-child{display:flex;justify-content:space-between;gap:12px;margin-bottom:8px}
+.budgetbox small{display:block;margin-top:7px;line-height:1.3}.budgetdetails{display:flex;justify-content:space-between;gap:12px;margin-top:8px;font-size:12px}
+.budgetbar{height:9px;background:#ddd;border-radius:10px;overflow:hidden}
+#budgetFill{height:100%;width:0;background:#171717;transition:width .2s}
+.practice{position:relative;padding-bottom:32px}
+.practice .cost{position:absolute;bottom:8px;left:10px;font-size:11px;font-weight:800;background:#ececec;color:#171717;padding:4px 7px;border-radius:999px}
+.practice.selected .cost{background:#fff;color:#171717}
+.practice.unaffordable{opacity:.42}
+
+
+.joinOverlay{position:fixed;inset:0;z-index:999;background:#111;display:flex;align-items:center;justify-content:center;padding:22px}
+.joinCard{width:min(470px,100%);background:#fff;border-radius:20px;padding:30px;box-shadow:0 24px 70px #0008}
+.joinCard h1{margin:4px 0 8px;font-size:32px}
+.joinCard label{display:block;font-weight:700;margin-top:15px}
+.joinCard input{width:100%;padding:13px;border:1px solid #bbb;border-radius:9px;margin-top:6px;font:inherit;text-transform:none}
+#joinCode{text-transform:uppercase}
+#joinError{min-height:20px;margin-top:10px;font-size:13px;font-weight:700}
+.eyebrow.dark{color:#333}
+
+.delta.loss{font-weight:900;text-decoration:underline}.delta.gain{font-weight:700}
