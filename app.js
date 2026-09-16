@@ -384,7 +384,7 @@ async function renderRanking(){
      if(data?.length)rows=data;
    }
    rows.sort((a,b)=>b.score-a.score);
-   $("ranking").innerHTML=rows.map((r,i)=>`<div class="rankrow ${r.team===team?"me":""}"><span>${i+1}</span><span>${r.team}</span><b>${Math.round(r.score||0)}/100</b><span>R${r.round||1}</span></div>`).join("");
+   $("ranking").innerHTML=rows.map((r,i)=>`<div class="rankrow ${r.team===team?"me":""}"><span>${i<3?["🥇","🥈","🥉"][i]:(i+1)}</span><span>${r.team}</span><b>${Math.round(r.score||0)}/100</b><span>R${r.round||1}</span></div>`).join("");
  }finally{rankingBusy=false;}
 }
 const refreshRankingBtn=$("refreshRanking");

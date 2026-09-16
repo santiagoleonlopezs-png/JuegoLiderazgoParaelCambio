@@ -28,12 +28,6 @@
   <div class="topstats"><span id="roundTag">Ronda 1/4</span><span id="timer">07:00</span><span id="scoreTag">0 pts</span></div>
 </header>
 <main>
-<div class="systemLegend" aria-label="Lectura del sistema">
-  <span>💡 Conciencia</span><span>🤝 Confianza</span><span>⚡ Energía</span>
-  <span>🔥 Compromiso</span><span>🧠 Conocimiento</span><span>🛠️ Capacidad</span>
-  <span>🎯 Apropiación</span><span>📈 KPI negocio</span>
-</div>
-
 <section class="hero">
   <p class="eyebrow">SIMULACIÓN DE LIDERAZGO DEL CAMBIO</p>
   <h1>Proyecto NEXUS</h1>
@@ -45,7 +39,7 @@
 <section>
   <div class="card ranking"><h2>🏆 Ranking del sector <small>equipos de la clase</small> <button id="refreshRanking" type="button" title="Actualizar ranking" style="width:auto;padding:5px 9px;margin-left:8px">↻</button></h2><p class="muted">Índice 0–100: combina resultado del negocio, apropiación, salud del cambio, precisión de la apuesta y sostenibilidad.</p><div id="ranking"></div></div>
   <div class="card"><h2 id="roundTitle"></h2><p id="situation"></p><div id="signals" class="signals"></div></div>
-  <div class="card"><h2>🔎 1. Lee el sistema</h2><p>Distribuye 100 puntos de atención según dónde crees que está el problema.</p><div id="diagnosis"></div><div class="sum">Atención asignada: <b id="diagSum">0</b>/100</div></div>
+  <div class="card"><h2>1. Lee el sistema</h2><p>Distribuye 100 puntos de atención según dónde crees que está el problema.</p><div id="diagnosis"></div><div class="sum">Atención asignada: <b id="diagSum">0</b>/100</div></div>
   <div class="card"><h2>Evolución de tu organización</h2><div id="metrics"></div></div>
   <div class="card">
   <h2>Gráfica de evolución</h2>
@@ -57,14 +51,14 @@
 
 <aside>
   <div class="card sticky">
-    <h2>🧠 2. Formula tu hipótesis</h2>
+    <h2>2. Formula tu hipótesis</h2>
     <textarea id="hypothesis" maxlength="180" placeholder="Si hacemos..., entonces esperamos que..., porque..."></textarea>
-    <h2>🛠️ 3. Diseña la intervención</h2>
-    <label>🎯 ¿Qué quieres movilizar?</label><select id="target"></select>
-    <label>👥 ¿Sobre quién?</label><select id="audience"></select>
-    <label>🧰 Arsenal de cambio <small>cada intervención consume capacidad</small></label>
+    <h2>3. Diseña la intervención</h2>
+    <label>¿Qué quieres movilizar?</label><select id="target"></select>
+    <label>¿Sobre quién?</label><select id="audience"></select>
+    <label>Arsenal de cambio <small>cada intervención consume capacidad</small></label>
     <div class="budgetbox">
-      <div><span>⚡ Bolsa total de transformación</span><b><span id="budgetRemaining">120</span> créditos disponibles</b></div>
+      <div><span>Bolsa total de transformación</span><b><span id="budgetRemaining">120</span> créditos disponibles</b></div>
       <div class="budgetbar"><div id="budgetFill"></div></div>
       <div class="budgetdetails"><span>Invertidos esta ronda: <b id="budgetUsed">0</b></span><span>Invertidos acumulados: <b id="budgetSpent">0</b>/120</span></div>
       <small>Estos 120 créditos son para toda la transformación. Lo que inviertas hoy reduce tu capacidad para responder en las siguientes rondas.</small>
