@@ -1,14 +1,5 @@
 const C=window.CHANGE_LAB_CONFIG||{};
 const vars=["Conciencia","Confianza","Energía","Compromiso","Conocimiento","Capacidad","Apropiación"];
-const metricIcons={
-  "Conciencia":"💡",
-  "Confianza":"🤝",
-  "Energía":"⚡",
-  "Compromiso":"🔥",
-  "Conocimiento":"🧠",
-  "Capacidad":"🛠️",
-  "Apropiación":"🎯"
-};
 const practices=[
 ["ADKAR","Diagnóstico individual del cambio"],["Lean Change","Experimentos y feedback loops"],
 ["Moving Motivators","Motivadores intrínsecos"],["Delegation Poker","Decisiones y empoderamiento"],
@@ -384,7 +375,10 @@ async function renderRanking(){
      if(data?.length)rows=data;
    }
    rows.sort((a,b)=>b.score-a.score);
-   $("ranking").innerHTML=rows.map((r,i)=>`<div class="rankrow ${r.team===team?"me":""}"><span>${i<3?["🥇","🥈","🥉"][i]:(i+1)}</span><span>${r.team}</span><b>${Math.round(r.score||0)}/100</b><span>R${r.round||1}</span></div>`).join("");
+   $("ranking").innerHTML=rows.map((r,i)=>{
+     const puesto = i===0 ? "🥇" : i===1 ? "🥈" : i===2 ? "🥉" : String(i+1);
+     return `<div class="rankrow ${r.team===team?"me":""}"><span class="rankPos">${puesto}</span><span>${r.team}</span><b>${Math.round(r.score||0)}/100</b><span>R${r.round||1}</span></div>`;
+   }).join("");
  }finally{rankingBusy=false;}
 }
 const refreshRankingBtn=$("refreshRanking");
