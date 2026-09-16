@@ -374,8 +374,28 @@ async function renderRanking(){
 }
 const refreshRankingBtn=$("refreshRanking");
 if(refreshRankingBtn)refreshRankingBtn.onclick=()=>renderRanking();
-// Ranking compartido: refresco automático cada 3 s + refresco manual ↻.
-setInterval(()=>{if(classCode&&team)renderRanking();},3000);
+
+// Ranking en tiempo real: se actualiza al entrar cambios en Supabase.
+let rankingChannel=null;
+function connectRealtimeRanking(){
+  if(!sb || !classCode)return;
+  if(rankingChannel){
+    sb.removeChannel(rankingChannel);
+    rankingChannel=null;
+  }
+  rankingChannel=sb
+    .channel(`ranking-${classCode}`)
+    .on("postgres_changes",{
+      event:"*",
+      schema:"public",
+      table:"change_leadership_scores",
+      filter:`class_code=eq.${classCode}`
+    },()=>renderRanking())
+    .subscribe();
+}
+connectRealtimeRanking();
+
+
 $("execute").onclick=execute;
 function continueAfterResult(){
   $("roundResultOverlay").classList.remove("show");
