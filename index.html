@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>Change Leadership Lab</title>
+  <title>Laboratorio de Liderazgo del Cambio</title>
   <link rel="stylesheet" href="styles.css">
   
 </head>
@@ -11,7 +11,7 @@
 
 <div id="joinOverlay" class="joinOverlay">
   <div class="joinCard">
-    <p class="eyebrow dark">CHANGE LEADERSHIP LAB</p>
+    <p class="eyebrow dark">LABORATORIO DE LIDERAZGO DEL CAMBIO</p>
     <h1>Ingresa a la simulación</h1>
     <p class="muted">Identifica tu organización para competir con los demás equipos de la clase.</p>
     <label>Nombre del equipo / organización</label>
@@ -24,7 +24,7 @@
 </div>
 
 <header>
-  <div><b>CHANGE LEADERSHIP LAB</b><span id="teamTag"></span></div>
+  <div><b>LABORATORIO DE LIDERAZGO DEL CAMBIO</b><span id="teamTag"></span></div>
   <div class="topstats"><span id="roundTag">Ronda 1/4</span><span id="timer">07:00</span><span id="scoreTag">0 pts</span></div>
 </header>
 <main>
@@ -73,6 +73,14 @@
 </aside>
 </div>
 </main>
+<div id="roundResultOverlay" class="roundResultOverlay"><div class="roundResultCard">
+<div class="resultTop"><div><p class="eyebrow">RESULTADO DE LA RONDA <span id="resultRoundNumber">1</span></p><h1 id="resultVerdict">Decisión ejecutada</h1><p>Observa las consecuencias antes de continuar.</p></div><div class="resultScoreBox"><span>Índice de desempeño sostenible</span><b id="resultScore">0/100</b></div></div>
+<div class="resultGrid">
+<section class="resultPanel"><h2>Decisión tomada</h2><p><b>Objetivo:</b> <span id="resultTarget"></span></p><p><b>Audiencia:</b> <span id="resultAudience"></span></p><div id="resultPractices" class="resultPracticeTags"></div><p><b>Hipótesis:</b> <span id="resultHypothesis"></span></p></section>
+<section class="resultPanel"><h2>Evolución de indicadores</h2><div id="resultDeltas"></div></section>
+<section class="resultPanel"><h2>Lectura de lo ocurrido</h2><p id="resultReading"></p><div id="resultWarnings"></div></section>
+<section class="resultPanel"><h2>Recursos de transformación</h2><div class="resultBudgetStats"><div><span>Invertidos esta ronda</span><b id="resultSpentRound"></b></div><div><span>Saldo disponible</span><b id="resultBudgetLeft"></b></div><div><span>KPI del negocio</span><b id="resultBusiness"></b></div></div></section>
+</div><button id="resultContinue">CONTINUAR A LA SIGUIENTE RONDA →</button></div></div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="config.js"></script>
 <script src="app.js"></script>

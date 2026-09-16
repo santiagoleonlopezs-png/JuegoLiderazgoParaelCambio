@@ -245,8 +245,28 @@ async function execute(){
  const net=deltas.reduce((a,b)=>a+b,0);
  const verdict=net>10?"La intervención generó avance sistémico.":net>=0?"El resultado fue mixto: hubo avances, pero también costos.":"La decisión deterioró el sistema: revisa diagnóstico, momento y combinación de prácticas.";
  $("feedback").className="feedback";
- $("feedback").innerHTML=`<b>Resultado observado</b><br><strong>${verdict}</strong><br><br>${vars.map(v=>{const d=Math.round(state.metrics[v]-before[v]);return `<span class="delta ${d<0?"loss":"gain"}">${v}: ${d>0?"+":""}${d}</span>`}).join(" · ")}<br><br><b>Créditos invertidos esta ronda:</b> ${roundSpend} · <b>Saldo:</b> ${TOTAL_BUDGET-state.spent} · <b>KPI negocio:</b> ${Math.round(state.business)} · <b>Índice de desempeño sostenible:</b> ${state.score}/100`;
- $("execute").disabled=true;$("next").hidden=state.round>=3;renderMetricsOnly();updateBudget();drawEvolutionChart();await syncScore();renderRanking();
+ $("feedback").innerHTML=`<b>Resultado observado</b><br><strong>${verdict}</strong>`;
+ $("resultRoundNumber").textContent=state.round+1;
+ $("resultVerdict").textContent=verdict;
+ $("resultScore").textContent=state.score+"/100";
+ $("resultTarget").textContent=$("target").value;
+ $("resultAudience").textContent=$("audience").value;
+ $("resultHypothesis").textContent=hyp;
+ $("resultPractices").innerHTML=selected.map(i=>`<span>${practices[i][0]}</span>`).join("");
+ $("resultSpentRound").textContent=roundSpend+" créditos";
+ $("resultBudgetLeft").textContent=(TOTAL_BUDGET-state.spent)+" créditos";
+ $("resultBusiness").textContent=Math.round(state.business)+"/100";
+ $("resultReading").textContent=verdict+" El resultado integra la pertinencia de las prácticas, la combinación elegida, la presión del contexto y el equilibrio del sistema.";
+ $("resultDeltas").innerHTML=vars.map(v=>{const d=Math.round(state.metrics[v]-before[v]);return `<div class="resultDelta"><span>${v}</span><div class="resultDeltaBar"><i style="width:${Math.round(state.metrics[v])}%"></i></div><b class="${d<0?"down":"up"}">${Math.round(state.metrics[v])} (${d>0?"+":""}${d})</b></div>`}).join("");
+ const warnings=[];
+ if(net<0) warnings.push("La combinación elegida deterioró el balance general del sistema.");
+ if(e.Energía<0) warnings.push("La intervención y/o la presión del contexto generaron un costo sobre la energía.");
+ if(selected.length>=4) warnings.push("La sobreintervención produjo costos de coordinación y fatiga.");
+ if(roundSpend>=70) warnings.push("La concentración de recursos en esta ronda redujo la capacidad de respuesta futura.");
+ $("resultWarnings").innerHTML=warnings.map(w=>`<div class="resultWarning">${w}</div>`).join("");
+ $("resultContinue").textContent=state.round>=3?"VER RESULTADO FINAL →":"CONTINUAR A LA SIGUIENTE RONDA →";
+ $("roundResultOverlay").classList.add("show");
+ $("execute").disabled=true;$("next").hidden=true;renderMetricsOnly();updateBudget();drawEvolutionChart();await syncScore();renderRanking();
 }
 function renderMetricsOnly(){$("metrics").innerHTML=vars.map(v=>`<div class="metricrow"><span>${v}</span><div class="bar"><div class="fill" style="width:${state.metrics[v]}%"></div></div><b>${Math.round(state.metrics[v])}</b></div>`).join("")+`<div class="metricrow"><span>KPI negocio</span><div class="bar"><div class="fill" style="width:${state.business}%"></div></div><b>${Math.round(state.business)}</b></div>`;$("scoreTag").textContent=state.score+"/100"}
 function save(){localStorage.setItem(stateKey(),JSON.stringify(state))}
@@ -269,18 +289,20 @@ async function renderRanking(){
  rows.sort((a,b)=>b.score-a.score);$("ranking").innerHTML=rows.map((r,i)=>`<div class="rankrow ${r.team===team?"me":""}"><span>${i+1}</span><span>${r.team}</span><b>${Math.round(r.score||0)}/100</b><span>R${r.round||1}</span></div>`).join("");
 }
 $("execute").onclick=execute;
-$("next").onclick=()=>{
-  state.round++;
-  selected=[];
+function continueAfterResult(){
+  $("roundResultOverlay").classList.remove("show");
+  if(state.round>=3){
+    $("feedback").innerHTML=`<b>Simulación finalizada</b><br>Índice de desempeño sostenible: <strong>${state.score}/100</strong>.`;
+    $("execute").disabled=true; window.scrollTo({top:0,behavior:"smooth"}); return;
+  }
+  state.round++;selected=[];
   document.querySelectorAll(".practice").forEach(x=>x.classList.remove("selected"));
-  $("hypothesis").value="";
-  $("feedback").innerHTML="";
-  updateBudget();
-  $("execute").disabled=false;
-  $("next").hidden=true;
-  save();
-  render();
-};
+  $("hypothesis").value="";$("feedback").innerHTML="";updateBudget();
+  $("execute").disabled=false;$("next").hidden=true;save();render();
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+$("resultContinue").onclick=continueAfterResult;
+$("next").onclick=continueAfterResult;
 
 $("joinBtn").addEventListener("click", enterGame);
 $("joinTeam").value=localStorage.getItem("changeTeam")||"";
