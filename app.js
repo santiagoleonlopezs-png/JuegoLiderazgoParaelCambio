@@ -383,15 +383,27 @@ function connectRealtimeRanking(){
     sb.removeChannel(rankingChannel);
     rankingChannel=null;
   }
+
   rankingChannel=sb
-    .channel(`ranking-${classCode}`)
-    .on("postgres_changes",{
-      event:"*",
-      schema:"public",
-      table:"change_leadership_scores",
-      filter:`class_code=eq.${classCode}`
-    },()=>renderRanking())
-    .subscribe();
+    .channel(`ranking-live-${classCode}-${Date.now()}`)
+    .on(
+      "postgres_changes",
+      {
+        event:"*",
+        schema:"public",
+        table:"change_leadership_scores"
+      },
+      (payload)=>{
+        // Solo reaccionamos si el cambio corresponde a la sala actual.
+        const changedClass=payload?.new?.class_code || payload?.old?.class_code;
+        if(!changedClass || changedClass===classCode) renderRanking();
+      }
+    )
+    .subscribe((status)=>{
+      console.log("Realtime ranking:",status);
+      // Al quedar conectado hacemos una lectura fresca.
+      if(status==="SUBSCRIBED") renderRanking();
+    });
 }
 connectRealtimeRanking();
 
