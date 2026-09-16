@@ -1,5 +1,14 @@
 const C=window.CHANGE_LAB_CONFIG||{};
 const vars=["Conciencia","Confianza","Energía","Compromiso","Conocimiento","Capacidad","Apropiación"];
+const metricIcons={
+  "Conciencia":"💡",
+  "Confianza":"🤝",
+  "Energía":"⚡",
+  "Compromiso":"🔥",
+  "Conocimiento":"🧠",
+  "Capacidad":"🛠️",
+  "Apropiación":"🎯"
+};
 const practices=[
 ["ADKAR","Diagnóstico individual del cambio"],["Lean Change","Experimentos y feedback loops"],
 ["Moving Motivators","Motivadores intrínsecos"],["Delegation Poker","Decisiones y empoderamiento"],
@@ -202,7 +211,8 @@ function effects(){
 
     if(f>=.95){
       consequence.high.push(n);
-      Object.entries(base).forEach(([k,v])=>e[k]+=v*f);
+      // Alta pertinencia: el efecto debe sentirse claramente en el sistema.
+      Object.entries(base).forEach(([k,v])=>e[k]+=v*f*1.45);
     }else if(f>=.65){
       consequence.medium.push(n);
       Object.entries(base).forEach(([k,v])=>e[k]+=v*f*.72);
@@ -210,14 +220,14 @@ function effects(){
       consequence.low.push(n);
       Object.entries(base).forEach(([k,v])=>e[k]+=v*f*.28);
       // costo de dispersión: aporta poco y consume capacidad de cambio
-      e.Energía-=1;e.Confianza-=0.5;e.Compromiso-=0.5;e.Capacidad-=0.5;e.Apropiación-=0.75;
+      e.Energía-=2;e.Confianza-=1;e.Compromiso-=1;e.Capacidad-=1;e.Apropiación-=1.5;
     }else if(f>=.25){
       consequence.irrelevant.push(n);
-      e.Energía-=2.5;e.Confianza-=1.5;e.Compromiso-=1.5;e.Capacidad-=1.5;e.Apropiación-=2;
+      e.Energía-=4;e.Confianza-=3;e.Compromiso-=3;e.Capacidad-=2.5;e.Apropiación-=3.5;
     }else{
       consequence.counterproductive.push(n);
       Object.entries(base).forEach(([k,v])=>{if(v<0)e[k]+=v;});
-      e.Energía-=5;e.Confianza-=4;e.Compromiso-=3.5;e.Capacidad-=3;e.Apropiación-=4;
+      e.Energía-=7;e.Confianza-=6;e.Compromiso-=5;e.Capacidad-=5;e.Apropiación-=6;
     }
   });
 
@@ -272,7 +282,7 @@ function effects(){
   Object.entries(pressure).forEach(([k,v])=>e[k]+=v);
 
   // Variabilidad moderada para evitar resultados completamente mecánicos.
-  vars.forEach(v=>e[v]+=Math.round((Math.random()*4)-2));
+  vars.forEach(v=>e[v]+=Math.round((Math.random()*2)-1));
 
   e.__consequence=consequence;
   return e;
