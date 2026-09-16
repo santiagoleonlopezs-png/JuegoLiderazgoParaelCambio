@@ -357,15 +357,25 @@ async function syncScore(){
  const {error}=await sb.from("change_leadership_scores").upsert({class_code:classCode,team,score:state.score,round:state.round+1,business:state.business,appropriation:state.metrics.Apropiación,updated_at:new Date().toISOString()},{onConflict:"class_code,team"});
  if(error){console.error("Supabase sync error:",error);alert("No se pudo actualizar el ranking. Revisa la conexión con Supabase.");}
 }
+let rankingBusy=false;
 async function renderRanking(){
- let rows=[{team,score:state.score,round:state.round+1}];
- if(sb){
-   let {data,error}=await sb.from("change_leadership_scores").select("*").eq("class_code",classCode).order("score",{ascending:false});
-   if(error)console.error("Supabase ranking error:",error);
-   if(data?.length)rows=data;
- }
- rows.sort((a,b)=>b.score-a.score);$("ranking").innerHTML=rows.map((r,i)=>`<div class="rankrow ${r.team===team?"me":""}"><span>${i+1}</span><span>${r.team}</span><b>${Math.round(r.score||0)}/100</b><span>R${r.round||1}</span></div>`).join("");
+ if(rankingBusy)return;
+ rankingBusy=true;
+ try{
+   let rows=[{team,score:state.score,round:state.round+1}];
+   if(sb){
+     let {data,error}=await sb.from("change_leadership_scores").select("*").eq("class_code",classCode).order("score",{ascending:false});
+     if(error)console.error("Supabase ranking error:",error);
+     if(data?.length)rows=data;
+   }
+   rows.sort((a,b)=>b.score-a.score);
+   $("ranking").innerHTML=rows.map((r,i)=>`<div class="rankrow ${r.team===team?"me":""}"><span>${i+1}</span><span>${r.team}</span><b>${Math.round(r.score||0)}/100</b><span>R${r.round||1}</span></div>`).join("");
+ }finally{rankingBusy=false;}
 }
+const refreshRankingBtn=$("refreshRanking");
+if(refreshRankingBtn)refreshRankingBtn.onclick=()=>renderRanking();
+// Ranking compartido: refresco automático cada 3 s + refresco manual ↻.
+setInterval(()=>{if(classCode&&team)renderRanking();},3000);
 $("execute").onclick=execute;
 function continueAfterResult(){
   $("roundResultOverlay").classList.remove("show");
