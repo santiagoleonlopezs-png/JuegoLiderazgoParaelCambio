@@ -304,12 +304,17 @@ let health=vars.slice(0,6).reduce((a,v)=>a+state.metrics[v],0)/6;
  // Puntaje final 0–100: 30% negocio, 30% apropiación, 20% salud del cambio,
  // 10% precisión de la hipótesis/apuesta y 10% equilibrio sostenible.
  state.score=Math.round(
-   state.business*.30 +
-   state.metrics.Apropiación*.30 +
-   health*.20 +
-   lectura*.10 +
-   sostenibilidad*.10
- );
+  (
+    state.metrics.Conciencia+
+    state.metrics.Confianza+
+    state.metrics.Energía+
+    state.metrics.Compromiso+
+    state.metrics.Conocimiento+
+    state.metrics.Capacidad+
+    state.metrics.Apropiación+
+    state.business
+  )/8
+);
  state.history.push({round:state.round+1,target:$("target").value,practices:selected.map(i=>practices[i][0]),credits:roundSpend,hypothesis:hyp});
  state.spent=(state.spent||0)+roundSpend;
  state.evolution.push({label:"R"+(state.round+1),metrics:{...state.metrics},business:state.business});
@@ -375,37 +380,19 @@ async function renderRanking(){
 const refreshRankingBtn=$("refreshRanking");
 if(refreshRankingBtn)refreshRankingBtn.onclick=()=>renderRanking();
 
-// Ranking en tiempo real: se actualiza al entrar cambios en Supabase.
-let rankingChannel=null;
-function connectRealtimeRanking(){
-  if(!sb || !classCode)return;
-  if(rankingChannel){
-    sb.removeChannel(rankingChannel);
-    rankingChannel=null;
-  }
-
-  rankingChannel=sb
-    .channel(`ranking-live-${classCode}-${Date.now()}`)
-    .on(
-      "postgres_changes",
-      {
-        event:"*",
-        schema:"public",
-        table:"change_leadership_scores"
-      },
-      (payload)=>{
-        // Solo reaccionamos si el cambio corresponde a la sala actual.
-        const changedClass=payload?.new?.class_code || payload?.old?.class_code;
-        if(!changedClass || changedClass===classCode) renderRanking();
-      }
-    )
-    .subscribe((status)=>{
-      console.log("Realtime ranking:",status);
-      // Al quedar conectado hacemos una lectura fresca.
-      if(status==="SUBSCRIBED") renderRanking();
-    });
+// Mismo patrón probado del juego de Cultura:
+// actualización automática cada 5 segundos + actualización manual.
+let rankingRefreshTimer=null;
+function startRankingRefresh(){
+  if(rankingRefreshTimer)clearInterval(rankingRefreshTimer);
+  rankingRefreshTimer=setInterval(()=>{
+    if(classCode&&team)renderRanking();
+  },5000);
 }
-connectRealtimeRanking();
+startRankingRefresh();
+
+// Ranking en tiempo real: se actualiza al entrar cambios en Supabase.
+
 
 
 $("execute").onclick=execute;
