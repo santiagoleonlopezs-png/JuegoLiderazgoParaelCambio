@@ -92,6 +92,7 @@
 .facLogin{max-width:430px;margin:12vh auto;background:white;border:1px solid #ddd;border-radius:18px;padding:24px}.facLogin h2{margin-top:0}
 @media(max-width:760px){.facControls{grid-template-columns:1fr}.facSummary{grid-template-columns:repeat(2,1fr)}.facTable{font-size:12px}.facTable th,.facTable td{padding:9px 7px}}
 
+.helpTip{display:inline-block;position:relative;margin-left:5px;vertical-align:middle}.helpTip summary{list-style:none;cursor:pointer;border:1px solid #64748b;border-radius:50%;width:19px;height:19px;display:inline-flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#334155}.helpTip summary::-webkit-details-marker{display:none}.helpTip[open] div{position:absolute;z-index:100;left:0;top:25px;background:#fff;color:#1f2937;border:1px solid #cbd5e1;box-shadow:0 6px 18px #0002;border-radius:9px;padding:10px;width:240px;font-size:13px;line-height:1.4;font-weight:400}
 </style>
 </head>
 <body>
@@ -222,27 +223,12 @@ window.CHANGE_LAB_CONFIG = {
 
 <script>
 const C=window.CHANGE_LAB_CONFIG||{};
+const definitions={"Conciencia": "Saber que habrá un cambio y entender por qué es necesario.", "Confianza": "Creer que los líderes cumplen lo que dicen y que el cambio se maneja con honestidad.", "Energía": "Tener tiempo, ánimo y fuerzas para participar sin agotarse.", "Compromiso": "Querer apoyar el cambio y estar dispuesto a hacer algo por él.", "Conocimiento": "Saber qué hay que hacer y cómo funciona la nueva manera de trabajar.", "Capacidad": "Poder aplicar lo aprendido con las habilidades y recursos disponibles.", "Apropiación": "Usar el cambio en el trabajo diario, sin depender de recordatorios constantes."};
 const vars=["Conciencia","Confianza","Energía","Compromiso","Conocimiento","Capacidad","Apropiación"];
-const practices=[
-["ADKAR","Diagnóstico individual del cambio"],["Lean Change","Experimentos y feedback loops"],
-["Moving Motivators","Motivadores intrínsecos"],["Delegation Poker","Decisiones y empoderamiento"],
-["Campañas de comunicación-difusión","Generar conciencia y alcance del cambio"],["TRIZ","Identificar comportamientos contraproducentes"],
-["Nudges","Reducir fricción conductual"],["Redes de influencia","Movilizar líderes informales"],
-["Storytelling","Construir sentido"],["Co-creación","Diseñar con las personas"],
-["Aprendizaje experiencial","Practicar para desarrollar capacidad"],["Coaching","Acompañamiento individual"],
-["Reconocimiento","Reforzar comportamientos y exaltar victorias tempranas"],["Comunidades de práctica","Aprendizaje entre pares"],
-["Lecciones aprendidas","Capturar y transferir aprendizaje de la experiencia"],["Comunicación segmentada","Claridad según audiencia"],
-["Respaldo directivo","Dar legitimidad, prioridad y coherencia al cambio"],["Grupos focales","Conversar sobre el cambio y comprender percepciones"],
-["Pensamiento científico","Formular hipótesis, experimentar y actualizar la posición con evidencia"],
-["Entrevista motivacional","Ayudar a que la persona verbalice sus propias razones para cambiar"],
-["Escucha persuasiva","Explorar qué podría hacer reconsiderar una posición antes de intentar convencer"],
-["Escala de disposición al cambio","Explorar la disposición y las razones que ya sostienen algún nivel de apertura"],
-["Análisis anticipado del fracaso","Imaginar que el cambio fracasó para anticipar causas y riesgos"],
-["Intenciones de implementación","Convertir intención en conducta mediante planes del tipo: si ocurre X, entonces haré Y"],
-["Identificación de casos exitosos","Encontrar dónde el cambio ya funciona y replicar sus condiciones"],
-["Inoculación preventiva de objeciones","Anticipar objeciones previsibles y preparar su análisis antes de que escalen"]
-];
+const practices=[["ADKAR", "Explica para qué se hace el cambio y qué significa para cada persona."], ["Escucha persuasiva", "Escucha las preocupaciones antes de ofrecer soluciones."], ["Co-creación", "Invita al equipo a construir soluciones útiles."], ["Lean Change", "Prueba una mejora pequeña y ajústala con resultados."], ["Aprendizaje experiencial", "Practica la nueva forma de trabajar en situaciones reales."], ["TRIZ", "Encuentra y elimina barreras que impiden avanzar."], ["Redes de influencia", "Invita a compañeros respetados a apoyar el cambio."], ["Coaching", "Acompaña a quienes tienen dificultades concretas."], ["Reconocimiento", "Destaca los avances y las conductas positivas."], ["Intenciones de implementación", "Acuerda qué hará cada persona, cuándo y cómo."], ["Identificación de casos exitosos", "Identifica lo que ya funciona y compártelo."], ["Análisis anticipado del fracaso", "Imagina qué podría fallar y toma medidas preventivas."], ["Coaching para líderes", "Activa sesiones de coaching para que los líderes cambien hábitos de dirección."], ["Gestión Humana", "Pide apoyo a Gestión Humana para resolver retos de personas y cultura."], ["Capacitación", "Organiza una formación práctica cuando faltan conocimientos o habilidades."]];
 
+const easyNames={"ADKAR": "Explicar el propósito del cambio", "Escucha persuasiva": "Escuchar antes de convencer", "Co-creación": "Involucrar al equipo en las soluciones", "Lean Change": "Probar cambios pequeños", "Aprendizaje experiencial": "Aprender haciendo", "TRIZ": "Eliminar obstáculos", "Redes de influencia": "Movilizar personas influyentes", "Coaching": "Acompañar a quienes tienen dificultades", "Reconocimiento": "Reconocer los avances", "Intenciones de implementación": "Convertir ideas en acciones concretas", "Identificación de casos exitosos": "Aprender de lo que funciona", "Análisis anticipado del fracaso": "Anticipar problemas y resistencias", "Gestión Humana": "Activar coaching", "Capacitación": "Activar a Gestión Humana", "Coaching para líderes": "Activar una capacitación"};
+function easyName(name){return easyNames[name]||name;}
 const practiceCosts={
  "ADKAR":20,
  "Lean Change":30,
@@ -265,7 +251,8 @@ const practiceCosts={
  "Pensamiento científico":20,"Entrevista motivacional":25,"Escucha persuasiva":20,
  "Escala de disposición al cambio":15,"Análisis anticipado del fracaso":20,
  "Intenciones de implementación":20,"Identificación de casos exitosos":20,
- "Inoculación preventiva de objeciones":20
+ "Inoculación preventiva de objeciones":20,
+ "Coaching para líderes":30,"Gestión Humana":25,"Capacitación":25
 };
 const TOTAL_BUDGET=120;
 
@@ -305,9 +292,9 @@ $("teamTag").textContent=" · "+team+" · "+classCode;
 }
 let selected=[]; let time=420, tick;
 const $=id=>document.getElementById(id);
-vars.forEach(v=>{$("target").innerHTML+=`<option>${v}</option>`;$("bets").innerHTML+=`<div class="betrow"><span>${v}</span><input type="range" min="-15" max="15" value="0" data-bet="${v}"><b id="b_${v}">0</b></div>`});
+vars.forEach(v=>{$("target").innerHTML+=`<option>${v}</option>`;$("bets").innerHTML+=`<div class="betrow"><span>${v} <details class="helpTip"><summary aria-label="Qué significa ${v}">?</summary><div>${definitions[v]}</div></details></span><input type="range" min="-15" max="15" value="0" data-bet="${v}"><b id="b_${v}">0</b></div>`});
 ["Alta dirección","Líderes","Influenciadores","Equipos","Individuos"].forEach(a=>$("audience").innerHTML+=`<option>${a}</option>`);
-practices.forEach((p,i)=>$("practices").innerHTML+=`<div class="practice" data-i="${i}"><b>${p[0]}</b><small>${p[1]}</small><span class="cost">${practiceCosts[p[0]]} créditos</span></div>`);
+practices.forEach((p,i)=>$("practices").innerHTML+=`<div class="practice" data-i="${i}"><b>${easyName(p[0])}</b><small>${p[1]}</small><span class="cost">${practiceCosts[p[0]]} créditos</span></div>`);
 function selectedCost(){return selected.reduce((sum,i)=>sum+(practiceCosts[practices[i][0]]||0),0)}
 function remainingBudget(){return Math.max(0,TOTAL_BUDGET-(state.spent||0)-selectedCost())}
 function updateBudget(){
@@ -331,6 +318,7 @@ document.querySelectorAll(".practice").forEach(x=>x.onclick=()=>{
      alert(`Esta intervención cuesta ${cost} créditos. Solo te quedan ${remainingBudget()} créditos para toda la transformación.`);
      return;
    }
+   if(selected.length>=3){alert("Puedes elegir hasta 3 intervenciones por ronda. Prioriza las más útiles.");return;}
    selected.push(i);x.classList.add("selected");
  }
  updateBudget();
@@ -391,7 +379,7 @@ function render(){
  $("diagnosis").innerHTML=vars.map(v=>`<div class="diagrow"><span>${v}</span><input type="range" min="0" max="40" value="0" data-diag="${v}"><b id="d_${v}">0</b></div>`).join("");
  document.querySelectorAll("[data-diag]").forEach(x=>x.oninput=()=>{let sum=[...document.querySelectorAll("[data-diag]")].reduce((a,b)=>a+(+b.value),0);if(sum>100){x.value-=sum-100} $("d_"+x.dataset.diag).textContent=x.value;$("diagSum").textContent=[...document.querySelectorAll("[data-diag]")].reduce((a,b)=>a+(+b.value),0)});
  $("metrics").innerHTML=vars.map(v=>`<div class="metricrow"><span>${v}</span><div class="bar"><div class="fill" style="width:${state.metrics[v]}%"></div></div><b>${Math.round(state.metrics[v])}</b></div>`).join("")+`<div class="metricrow"><span>KPI negocio</span><div class="bar"><div class="fill" style="width:${state.business}%"></div></div><b>${Math.round(state.business)}</b></div>`;
- $("history").innerHTML=state.history.length?state.history.map(h=>`<div class="historyitem"><b>R${h.round}: ${h.target}</b> · <b>${h.credits??"—"} créditos invertidos</b><br>${h.practices.join(" + ")}<br><small>${h.hypothesis}</small></div>`).join(""):"Aún no has ejecutado decisiones.";
+ $("history").innerHTML=state.history.length?state.history.map(h=>`<div class="historyitem"><b>R${h.round}: ${h.target}</b> · <b>${h.credits??"—"} créditos invertidos</b><br>${h.practices.map(easyName).join(" + ")}<br><small>${h.hypothesis}</small></div>`).join(""):"Aún no has ejecutado decisiones.";
  renderRanking(); drawEvolutionChart(); startTimer();
 }
 function startTimer(){clearInterval(tick);time=420;tick=setInterval(()=>{time--;let m=Math.floor(time/60),s=time%60;$("timer").textContent=`${String(m).padStart(2,"0")}:${String(s).padStart(2,"0")}`;if(time<=0)clearInterval(tick)},1000)}
@@ -426,16 +414,17 @@ function effects(){
     "Análisis anticipado del fracaso":{Conocimiento:4,Capacidad:4,Confianza:2},
     "Intenciones de implementación":{Capacidad:7,Compromiso:4,Apropiación:4},
     "Identificación de casos exitosos":{Confianza:4,Capacidad:5,Compromiso:4},
-    "Inoculación preventiva de objeciones":{Confianza:4,Conocimiento:4,Compromiso:3}
+    "Inoculación preventiva de objeciones":{Confianza:4,Conocimiento:4,Compromiso:3},
+ "Coaching para líderes":{Confianza:5,Compromiso:4,Capacidad:4},"Gestión Humana":{Confianza:4,Compromiso:4,Capacidad:3},"Capacitación":{Conocimiento:8,Capacidad:5,Energía:-2}
   };
 
   // Pertinencia por momento. No existe una única respuesta correcta:
   // varias prácticas pueden ser válidas, pero no todas son igualmente oportunas.
   const fit=[
-{"ADKAR":1.35,"Lean Change":0.75,"Moving Motivators":0.65,"Delegation Poker":0.55,"Campañas de comunicación-difusión":1.25,"TRIZ":0.75,"Nudges":0.45,"Redes de influencia":0.85,"Storytelling":1.25,"Co-creación":0.8,"Aprendizaje experiencial":0.55,"Coaching":0.45,"Reconocimiento":0.55,"Comunidades de práctica":0.5,"Lecciones aprendidas":0.35,"Comunicación segmentada":1.15,"Respaldo directivo":1.1,"Grupos focales":1.0,"Pensamiento científico":0.65,"Entrevista motivacional":0.35,"Escucha persuasiva":0.45,"Escala de disposición al cambio":0.45,"Análisis anticipado del fracaso":0.55,"Intenciones de implementación":0.35,"Identificación de casos exitosos":0.45,"Inoculación preventiva de objeciones":0.65},
+{"ADKAR":1.35,"Lean Change":0.75,"Moving Motivators":0.65,"Delegation Poker":0.55,"Campañas de comunicación-difusión":1.25,"TRIZ":0.75,"Nudges":0.45,"Redes de influencia":0.85,"Storytelling":1.25,"Co-creación":0.8,"Aprendizaje experiencial":0.55,"Coaching":0.45,"Reconocimiento":0.55,"Comunidades de práctica":0.5,"Lecciones aprendidas":0.35,"Comunicación segmentada":1.15,"Respaldo directivo":1.1,"Grupos focales":1.0,"Pensamiento científico":0.65,"Entrevista motivacional":0.35,"Escucha persuasiva":0.45,"Escala de disposición al cambio":0.45,"Análisis anticipado del fracaso":0.55,"Intenciones de implementación":0.35,"Identificación de casos exitosos":0.45,"Inoculación preventiva de objeciones":0.65,"Coaching para líderes":0.9,"Gestión Humana":1.15,"Capacitación":1.25,"Coaching para líderes":0.35,"Gestión Humana":0.7,"Capacitación":0.45},
 {"ADKAR":0.75,"Lean Change":1.2,"Moving Motivators":0.8,"Delegation Poker":0.9,"Campañas de comunicación-difusión":0.35,"TRIZ":0.8,"Nudges":0.65,"Redes de influencia":1.15,"Storytelling":0.55,"Co-creación":1.15,"Aprendizaje experiencial":1.35,"Coaching":1.2,"Reconocimiento":0.65,"Comunidades de práctica":1.15,"Lecciones aprendidas":0.7,"Comunicación segmentada":0.7,"Respaldo directivo":0.8,"Grupos focales":1.15,"Pensamiento científico":0.85,"Entrevista motivacional":0.9,"Escucha persuasiva":1.0,"Escala de disposición al cambio":0.85,"Análisis anticipado del fracaso":0.75,"Intenciones de implementación":0.9,"Identificación de casos exitosos":0.85,"Inoculación preventiva de objeciones":0.65},
-{"ADKAR":0.45,"Lean Change":0.85,"Moving Motivators":0.75,"Delegation Poker":0.7,"Campañas de comunicación-difusión":0.15,"TRIZ":0.65,"Nudges":0.45,"Redes de influencia":0.8,"Storytelling":0.45,"Co-creación":0.75,"Aprendizaje experiencial":0.55,"Coaching":0.75,"Reconocimiento":0.55,"Comunidades de práctica":0.7,"Lecciones aprendidas":0.55,"Comunicación segmentada":0.45,"Respaldo directivo":0.55,"Grupos focales":0.9,"Pensamiento científico":1.25,"Entrevista motivacional":1.35,"Escucha persuasiva":1.35,"Escala de disposición al cambio":1.2,"Análisis anticipado del fracaso":0.9,"Intenciones de implementación":0.65,"Identificación de casos exitosos":1.0,"Inoculación preventiva de objeciones":1.15},
-{"ADKAR":0.55,"Lean Change":1.3,"Moving Motivators":0.8,"Delegation Poker":1.05,"Campañas de comunicación-difusión":0.25,"TRIZ":0.7,"Nudges":1.05,"Redes de influencia":1.2,"Storytelling":0.45,"Co-creación":0.8,"Aprendizaje experiencial":1.05,"Coaching":0.85,"Reconocimiento":0.8,"Comunidades de práctica":0.95,"Lecciones aprendidas":0.75,"Comunicación segmentada":0.55,"Respaldo directivo":0.75,"Grupos focales":0.7,"Pensamiento científico":0.8,"Entrevista motivacional":0.65,"Escucha persuasiva":0.6,"Escala de disposición al cambio":0.55,"Análisis anticipado del fracaso":1.0,"Intenciones de implementación":1.25,"Identificación de casos exitosos":1.1,"Inoculación preventiva de objeciones":0.75},
+{"ADKAR":0.45,"Lean Change":0.85,"Moving Motivators":0.75,"Delegation Poker":0.7,"Campañas de comunicación-difusión":0.15,"TRIZ":0.65,"Nudges":0.45,"Redes de influencia":0.8,"Storytelling":0.45,"Co-creación":0.75,"Aprendizaje experiencial":0.55,"Coaching":0.75,"Reconocimiento":0.55,"Comunidades de práctica":0.7,"Lecciones aprendidas":0.55,"Comunicación segmentada":0.45,"Respaldo directivo":0.55,"Grupos focales":0.9,"Pensamiento científico":1.25,"Entrevista motivacional":1.35,"Escucha persuasiva":1.35,"Escala de disposición al cambio":1.2,"Análisis anticipado del fracaso":0.9,"Intenciones de implementación":0.65,"Identificación de casos exitosos":1.0,"Inoculación preventiva de objeciones":1.15,"Coaching para líderes":1.1,"Gestión Humana":1.2,"Capacitación":0.25},
+{"ADKAR":0.55,"Lean Change":1.3,"Moving Motivators":0.8,"Delegation Poker":1.05,"Campañas de comunicación-difusión":0.25,"TRIZ":0.7,"Nudges":1.05,"Redes de influencia":1.2,"Storytelling":0.45,"Co-creación":0.8,"Aprendizaje experiencial":1.05,"Coaching":0.85,"Reconocimiento":0.8,"Comunidades de práctica":0.95,"Lecciones aprendidas":0.75,"Comunicación segmentada":0.55,"Respaldo directivo":0.75,"Grupos focales":0.7,"Pensamiento científico":0.8,"Entrevista motivacional":0.65,"Escucha persuasiva":0.6,"Escala de disposición al cambio":0.55,"Análisis anticipado del fracaso":1.0,"Intenciones de implementación":1.25,"Identificación de casos exitosos":1.1,"Inoculación preventiva de objeciones":0.7,"Coaching para líderes":0.85,"Gestión Humana":0.85,"Capacitación":0.555,"Coaching para líderes":0.8,"Gestión Humana":1.05,"Capacitación":1.2},
 {"ADKAR":0.45,"Lean Change":1.05,"Moving Motivators":0.85,"Delegation Poker":0.9,"Campañas de comunicación-difusión":0.15,"TRIZ":0.6,"Nudges":0.9,"Redes de influencia":0.95,"Storytelling":0.35,"Co-creación":0.55,"Aprendizaje experiencial":0.9,"Coaching":0.8,"Reconocimiento":1.25,"Comunidades de práctica":1.2,"Lecciones aprendidas":1.35,"Comunicación segmentada":0.45,"Respaldo directivo":0.65,"Grupos focales":0.65,"Pensamiento científico":0.8,"Entrevista motivacional":0.75,"Escucha persuasiva":0.7,"Escala de disposición al cambio":0.6,"Análisis anticipado del fracaso":1.15,"Intenciones de implementación":1.0,"Identificación de casos exitosos":1.2,"Inoculación preventiva de objeciones":0.7}
 ][state.round];
 
@@ -492,6 +481,13 @@ function effects(){
   if(names.includes("Campañas de comunicación-difusión")&&state.metrics.Conciencia>75){e.Energía-=5;e.Confianza-=2;consequence.warnings.push("Más comunicación masiva cuando la conciencia ya era alta produjo saturación.");}
   if(names.includes("Reconocimiento")&&state.metrics.Confianza<40){e.Confianza-=3;consequence.warnings.push("El reconocimiento fue percibido con baja credibilidad por la falta de confianza.");}
 
+  // Reglas conductuales de las tres nuevas intervenciones.
+  if(names.includes("Capacitación")&&state.metrics.Conocimiento>=70){e.Energía-=5;e.Confianza-=2;consequence.warnings.push("La capacitación no resolvió el problema: el equipo ya conocía el cambio.");}
+  if(names.includes("Capacitación")&&state.metrics.Compromiso<40){e.Energía-=4;e.Compromiso-=2;consequence.warnings.push("Capacitar sin disposición al cambio aumentó el cansancio.");}
+  if(names.includes("Gestión Humana")&&names.includes("Coaching para líderes")){e.Confianza+=3;e.Capacidad+=2;consequence.synergies.push("Gestión Humana + coaching: apoyo especializado y líderes mejor preparados.");}
+  if(names.includes("Capacitación")&&names.includes("Aprendizaje experiencial")){e.Capacidad+=4;e.Conocimiento+=2;consequence.synergies.push("Capacitación + práctica: el aprendizaje se convierte en habilidad.");}
+  if(names.includes("Coaching para líderes")&&state.metrics.Energía<40){e.Energía-=3;consequence.warnings.push("El coaching no compensa por sí solo una sobrecarga de trabajo.");}
+  if(names.includes("Gestión Humana")&&state.round===2&&names.includes("Escucha persuasiva")){e.Confianza+=3;e.Compromiso+=2;consequence.synergies.push("Gestión Humana + escucha: se atienden preocupaciones con apoyo concreto.");}
   // Costo de oportunidad: si ninguna intervención tiene pertinencia media-alta,
   // el problema central continúa avanzando aunque el equipo haya gastado recursos.
   const useful=consequence.high.length+consequence.medium.length;
@@ -501,7 +497,8 @@ function effects(){
       {Confianza:-2,Energía:-2,Compromiso:-3,Capacidad:-2,Apropiación:-3},
       {Confianza:-2,Energía:-3,Compromiso:-2,Capacidad:-3,Apropiación:-3},
       {Confianza:-2,Energía:-4,Compromiso:-3,Capacidad:-3,Apropiación:-4},
-      {Confianza:-2,Energía:-4,Compromiso:-3,Capacidad:-2,Apropiación:-4}
+      {Confianza:-2,Energía:-4,Compromiso:-3,Capacidad:-2,Apropiación:-4},
+      {Confianza:-2,Energía:-5,Compromiso:-3,Capacidad:-3,Apropiación:-5}
     ][state.round];
     Object.entries(deterioration).forEach(([k,v])=>e[k]+=v);
     consequence.warnings.push("Costo de oportunidad: se invirtieron recursos sin intervenir suficientemente la condición crítica de la ronda.");
@@ -514,11 +511,11 @@ function effects(){
   if(spend>=90){e.Energía-=4;e.Confianza-=3;}
 
   // Presión natural de cada ronda: no actuar bien también tiene consecuencias.
-  const pressure=[{Energía:-2},{Energía:-4,Capacidad:-2},{Energía:-6,Confianza:-2},{Energía:-5,Compromiso:-2}][state.round];
+  const pressure=[{Energía:-2},{Energía:-4,Capacidad:-2},{Energía:-6,Confianza:-2},{Energía:-5,Compromiso:-2},{Energía:-5,Compromiso:-3}][state.round];
   Object.entries(pressure).forEach(([k,v])=>e[k]+=v);
 
   // Variabilidad moderada para evitar resultados completamente mecánicos.
-  vars.forEach(v=>e[v]+=Math.round((Math.random()*2)-1));
+  // Sin azar: decisiones idénticas en el mismo contexto producen el mismo resultado.
 
   e.__consequence=consequence;
   return e;
@@ -577,7 +574,7 @@ let health=vars.slice(0,6).reduce((a,v)=>a+state.metrics[v],0)/6;
  $("resultTarget").textContent=$("target").value;
  $("resultAudience").textContent=$("audience").value;
  $("resultHypothesis").textContent=hyp;
- $("resultPractices").innerHTML=selected.map(i=>`<span>${practices[i][0]}</span>`).join("");
+ $("resultPractices").innerHTML=selected.map(i=>`<span>${easyName(practices[i][0])}</span>`).join("");
  $("resultSpentRound").textContent=roundSpend+" créditos";
  $("resultBudgetLeft").textContent=(TOTAL_BUDGET-state.spent)+" créditos";
  $("resultBusiness").textContent=Math.round(state.business)+"/100";
@@ -733,7 +730,7 @@ window.addEventListener("resize",()=>{if(state)drawEvolutionChart();});
       const box=$f("facDecisions");
       if(box){
         const grouped={};(decisions||[]).forEach(d=>(grouped[d.team]??=[]).push(d));
-        box.innerHTML=Object.keys(grouped).length?Object.entries(grouped).map(([tm,ds])=>`<div style="border-top:1px solid #e5e7eb;padding:14px 0"><b>${tm}</b>${ds.sort((a,b)=>a.round-b.round).map(d=>`<div style="margin-top:10px;padding:12px;background:#f8fafc;border-radius:10px"><b>R${d.round}</b> · ${(d.practices||[]).join(" + ")}<br><span class="facMuted">Objetivo: ${d.objective||"—"} · Audiencia: ${d.audience||"—"}</span>${d.hypothesis?`<br>${d.hypothesis}`:""}${d.consequence?`<br><span class="facMuted"><b>Consecuencia:</b> ${d.consequence}</span>`:""}</div>`).join("")}</div>`).join(""):`<div class="facMuted">Aún no hay decisiones registradas para esta sala.</div>`;
+        box.innerHTML=Object.keys(grouped).length?Object.entries(grouped).map(([tm,ds])=>`<div style="border-top:1px solid #e5e7eb;padding:14px 0"><b>${tm}</b>${ds.sort((a,b)=>a.round-b.round).map(d=>`<div style="margin-top:10px;padding:12px;background:#f8fafc;border-radius:10px"><b>R${d.round}</b> · ${(d.practices||[]).map(easyName).join(" + ")}<br><span class="facMuted">Objetivo: ${d.objective||"—"} · Audiencia: ${d.audience||"—"}</span>${d.hypothesis?`<br>${d.hypothesis}`:""}${d.consequence?`<br><span class="facMuted"><b>Consecuencia:</b> ${d.consequence}</span>`:""}</div>`).join("")}</div>`).join(""):`<div class="facMuted">Aún no hay decisiones registradas para esta sala.</div>`;
       }
     }catch(e){
       $f("facError").textContent="No se pudo cargar la sala: "+(e.message||e);
